@@ -47,7 +47,7 @@ export default function AdminDashboard() {
             onChange={(e) => setRole(e.target.value)}
           >
             <option value="software-developer">Software Developer</option>
-            <option value="accounting">Accounting</option>
+            <option value="accountant">Accountant</option>
           </select>
         </div>
 
