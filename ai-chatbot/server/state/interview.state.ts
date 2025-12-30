@@ -1,0 +1,32 @@
+export enum InterviewStage {
+  Introduction = 0,
+  SkillsExperience = 1,
+  Expectations = 2,
+  CandidateQuestions = 3,
+  Ended = 4
+}
+
+export type AiReply = {
+  message: string;
+  questionAnswered: boolean;
+};
+
+export type HistoryItem = {
+  role: "user" | "assistant";
+  message: string;
+};
+
+export class InterviewState {
+  currentStage = InterviewStage.Introduction;
+  questionsAskedInStage = 0;
+  ended = false;
+  history: HistoryItem[] = [];
+}
+
+export interface OpenAiResponse {
+  choices: OpenAiChoice[];
+}
+
+interface OpenAiChoice {
+  message: { role: "system" | "user" | "assistant"; content: string };
+}
