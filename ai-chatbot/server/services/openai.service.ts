@@ -25,7 +25,6 @@ export class OpenAiService {
 
       const json: OpenAiResponse & { error?: { message: string } } = await res.json();
 
-      // Handle API errors (like rate limit, invalid API key, etc.)
       if (json.error) {
         return {
           message: `OpenAI API Error: ${json.error.message}`,
@@ -44,7 +43,6 @@ export class OpenAiService {
 
       return { message: cleanedMessage, questionAnswered: answered };
     } catch (err: unknown) {
-      // Catch network errors or unexpected issues
       return {
         message: `OpenAI request failed: ${err instanceof Error ? err.message : String(err)}`,
         questionAnswered: false

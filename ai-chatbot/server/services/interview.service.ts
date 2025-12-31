@@ -8,7 +8,7 @@ export class InterviewService {
   private getState(sessionId: string, role?: string): InterviewState {
     if (!interviewStates.has(sessionId)) {
       const state = new InterviewState();
-      if (role) state.role = role; // set role immediately
+      if (role) state.role = role; 
       interviewStates.set(sessionId, state);
     }
     return interviewStates.get(sessionId)!;
@@ -21,12 +21,10 @@ export class InterviewService {
   ): Promise<{ message: string; messages?: Message[]; ended: boolean }> {
     const state = this.getState(sessionId, role);
 
-    // Set role if provided and not already set
     if (role && !state.role) state.role = role;
 
-    // Auto-send first introduction if history is empty
     if (state.history.length === 0) {
-      const intro = this.getStagePrompt(state); // role is already set here
+      const intro = this.getStagePrompt(state);
       state.history.push({ role: "assistant", message: intro });
       return { message: intro, messages: this.mapHistory(state), ended: false };
     }
@@ -34,7 +32,6 @@ export class InterviewService {
     if (!userMessage) return { messages: this.mapHistory(state), message: "", ended: state.ended };
     if (state.ended) return { message: "The interview has ended. Thank you.", ended: true };
 
-    // Skip stage manually
     const lower = userMessage.toLowerCase();
     if (lower.includes("next stage") || lower.includes("skip")) {
       state.currentStage++;
@@ -44,7 +41,6 @@ export class InterviewService {
       return { message: prompt, ended: false };
     }
 
-    // Call AI
     const aiReply: AiReply = await openAiService.getReply(userMessage, state);
 
     state.history.push({ role: "user", message: userMessage });
@@ -53,7 +49,6 @@ export class InterviewService {
     if (aiReply.questionAnswered) state.questionsAskedInStage++;
     this.advanceStageIfNeeded(state);
 
-    // End interview
     if (aiReply.message.includes("INTERVIEW_ENDED") || state.currentStage >= InterviewStage.Ended) {
       state.ended = true;
       return {
@@ -70,7 +65,7 @@ export class InterviewService {
   }
 
   private advanceStageIfNeeded(state: InterviewState) {
-    const limits = [1, 3, 2, 1]; // Introduction, Skills, Technical, Salary
+    const limits = [1, 3, 2, 1];
     if (state.currentStage < limits.length && state.questionsAskedInStage >= limits[state.currentStage]) {
       state.currentStage++;
       state.questionsAskedInStage = 0;
@@ -84,7 +79,7 @@ export class InterviewService {
       case InterviewStage.SkillsExperience:
         return "Can you describe your skills and relevant experience?";
       case InterviewStage.Technical:
-        return buildInterviewerPrompt(state); // dynamically includes candidate role
+        return buildInterviewerPrompt(state);
       case InterviewStage.Expectations:
         return "What are your salary expectations?";
       case InterviewStage.CandidateQuestions:

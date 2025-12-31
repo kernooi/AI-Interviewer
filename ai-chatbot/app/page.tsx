@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 export default function AdminDashboard() {
   const [link, setLink] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
-  const [role, setRole] = useState<string>("software-developer"); // default role
+  const [role, setRole] = useState<string>("software-developer");
 
   const generateInterviewLink = () => {
     const sessionId = uuidv4();
